@@ -9,6 +9,7 @@ const concat      = require('gulp-concat');
 const inject      = require('gulp-inject');
 const autoprefix  = require('gulp-autoprefixer');
 const notify      = require('gulp-notify');
+const gulpIf      = require('gulp-if');
 const reload      = browserSync.reload;
 
 gulp.task('serve', ['sass', 'esJs', 'index-inject'], () => {
@@ -37,7 +38,7 @@ gulp.task('esJs', () => {
     return gulp.src('./src/js/*.js')
         .pipe(babel({presets: ['es2015']}))
         .pipe(concat('script.min.js'))
-        .pipe(uglify())
+        .pipe(gulpIf('*.js', uglify()))
         .pipe(gulp.dest('./src/build/js'))
         .pipe(notify('[OK] - Transpile do JSEs6 para JS'));
 });
@@ -51,4 +52,4 @@ gulp.task('index-inject', () => {
     .pipe(notify('[OK] - Injeção do JS e CSS na página index'));
 });
 
-gulp.task('default', ['serve', 'esJs', 'index-inject']);
+gulp.task('default', ['serve', 'esJs', 'index-inject']);    
