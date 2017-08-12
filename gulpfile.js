@@ -1,27 +1,30 @@
-const gulp        = require('gulp');
-const browserSync = require('browser-sync').create();
-const sass        = require('gulp-sass');
-const cssmin      = require('gulp-cssmin');
-const cssComments = require('gulp-strip-css-comments');
-const babel       = require('gulp-babel');
-const uglify      = require('gulp-uglify');
-const concat      = require('gulp-concat');
-const inject      = require('gulp-inject');
-const autoprefix  = require('gulp-autoprefixer');
-const notify      = require('gulp-notify');
-const gulpIf      = require('gulp-if');
-const htmlmin     = require('gulp-htmlmin');
-const reload      = browserSync.reload;
-
+const gulp        = require('gulp'),
+      browserSync = require('browser-sync').create(),
+      sass        = require('gulp-sass'),
+      cssmin      = require('gulp-cssmin'),
+      cssComments = require('gulp-strip-css-comments'),
+      babel       = require('gulp-babel'),
+      uglify      = require('gulp-uglify'),
+      concat      = require('gulp-concat'),
+      inject      = require('gulp-inject'),
+      autoprefix  = require('gulp-autoprefixer'),
+      notify      = require('gulp-notify'),
+      gulpIf      = require('gulp-if'),
+      cleanCss    = require('gulp-clean-css'),
+      rev         = require('gulp-rev'),
+      reload      = browserSync.reload;
 
 //compile sass in css
 gulp.task('sass', () => {
     return gulp.src("./src/styles/scss/**/*.scss") 
         .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(concat('style.min.css')) 
-        .pipe(gulp.dest("./src/build/css")) 
+        .pipe(concat('bundle.min.css')) 
         .pipe(cssComments({all: true}))
         .pipe(autoprefix({browsers: ['last 3 versions', '> 5%'], cascade: false}))
+        .pipe(cleanCss())
+        .pipe(rev())
+        .pipe(gulp.dest("./src/build/css")) 
+        .pipe(rev.manifest())
         .pipe(browserSync.stream())
         .pipe(notify('[OK] - Compilação do SASS para CSS'));
 });
@@ -30,9 +33,11 @@ gulp.task('sass', () => {
 gulp.task('esJs', () => {
     return gulp.src('./src/js/*.js')
         .pipe(babel({presets: ['es2015']}))
-        .pipe(concat('script.min.js'))
+        .pipe(concat('bundle.min.js'))
         .pipe(gulpIf('*.js', uglify()))
+        .pipe(rev())
         .pipe(gulp.dest('./src/build/js'))
+        .pipe(rev.manifest())
         .pipe(notify('[OK] - Transpile do JSEs6 para JS'));
 });
 
@@ -44,15 +49,8 @@ gulp.task('index-inject', () => {
     .pipe(notify('[OK] - Injeção do JS e CSS na página index'));
 });
 
-//Mimify Html to build
-gulp.task('htmlmin', () => {
-    return gulp.src('./src/**/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('./src/build/'))
-    .pipe(notify('[OK] - Mimificando HTML'));
-});
 
-gulp.task('serve', ['sass', 'esJs', 'index-inject', 'htmlmin'], () => {
+gulp.task('serve', ['sass', 'esJs', 'index-inject'], () => {
     browserSync.init({
         server: "./src"
     });
@@ -61,4 +59,4 @@ gulp.task('serve', ['sass', 'esJs', 'index-inject', 'htmlmin'], () => {
     gulp.watch("./src/**/*.html").on("change", reload);
 });
 
-gulp.task('default', ['serve', 'esJs', 'index-inject', 'htmlmin']);    
+gulp.task('default', ['serve', 'esJs', 'index-inject']);    
