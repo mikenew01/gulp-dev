@@ -1,5 +1,3 @@
-//npm install gulp gulp-sass gulp-cssmin gulp-strip-css-comments gulp-babel gulp-uglify gulp-concat gulp-inject gulp-watch browser-sync --save-dev
-
 const gulp        = require('gulp');
 const browserSync = require('browser-sync').create();
 const sass        = require('gulp-sass');
@@ -9,6 +7,7 @@ const babel       = require('gulp-babel');
 const uglify      = require('gulp-uglify');
 const concat      = require('gulp-concat');
 const inject      = require('gulp-inject');
+const autoprefix  = require('gulp-autoprefixer');
 const reload      = browserSync.reload;
 
 gulp.task('serve', ['sass', 'esJs', 'index-inject'], () => {
@@ -27,6 +26,10 @@ gulp.task('sass', () => {
         .pipe(concat('style.min.css')) 
         .pipe(gulp.dest("./src/build/css")) 
         .pipe(cssComments({all: true}))
+        .pipe(autoprefix({
+            browsers: ['last 3 versions'],
+            cascade: false
+        }))
         .pipe(browserSync.stream());
 });
 
