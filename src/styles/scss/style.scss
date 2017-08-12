@@ -1,9 +1,10 @@
 h1{
 	width: 400px;
-	heigth: 200px;
+	height: 200px;
 	background-color: #000;
+	color: white;
 
 	&:hover{
-		background-color: red;
+		background-color: blue;
 	}
 }
