@@ -46,8 +46,8 @@ gulp.task('esJs', () => {
 //Inject js and css
 //Error, not inject into html
 gulp.task('index-inject', () => {
-    return gulp.src('./src/index.html')
-    .pipe(inject(gulp.src(['build/css/*.css', 'build/js/*.js'], {relative:true})))
+    return gulp.src('./src/**/*.html')
+    .pipe(inject(gulp.src(['./src/build/css/*.css', './src/build/js/*.js'], {read: false}), {relative: true}))
     .pipe(gulp.dest('./src/'))
     .pipe(notify('[OK] - Injeção do JS e CSS na página index'));
 });
