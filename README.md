@@ -12,3 +12,5 @@ Projeto base com gulp.
 - Task para transpilar JavaScript ES6 para JS.
 - Task para compilar e comprimir arquivos SCSS para CSS.
 - Task para escutar alterações em modo desenvolvimento.
+- Task para mimificar arquivos HTML no build. 
+- Injeção automática no index.html (style.css e scripts.js)
