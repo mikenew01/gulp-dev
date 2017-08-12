@@ -10,16 +10,9 @@ const inject      = require('gulp-inject');
 const autoprefix  = require('gulp-autoprefixer');
 const notify      = require('gulp-notify');
 const gulpIf      = require('gulp-if');
+const htmlmin     = require('gulp-htmlmin');
 const reload      = browserSync.reload;
 
-gulp.task('serve', ['sass', 'esJs', 'index-inject'], () => {
-    browserSync.init({
-        server: "./src"
-    });
-
-    gulp.watch("./src/styles/scss/**/*.scss", ['sass']);
-    gulp.watch("./src/**/*.html").on("change", reload);
-});
 
 //compile sass in css
 gulp.task('sass', () => {
@@ -44,7 +37,6 @@ gulp.task('esJs', () => {
 });
 
 //Inject js and css
-//Error, not inject into html
 gulp.task('index-inject', () => {
     return gulp.src('./src/**/*.html')
     .pipe(inject(gulp.src(['./src/build/css/*.css', './src/build/js/*.js'], {read: false}), {relative: true}))
@@ -52,4 +44,21 @@ gulp.task('index-inject', () => {
     .pipe(notify('[OK] - Injeção do JS e CSS na página index'));
 });
 
-gulp.task('default', ['serve', 'esJs', 'index-inject']);    
+//Mimify Html to build
+gulp.task('htmlmin', () => {
+    return gulp.src('./src/**/*.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(gulp.dest('./src/build/'))
+    .pipe(notify('[OK] - Mimificando HTML'));
+});
+
+gulp.task('serve', ['sass', 'esJs', 'index-inject', 'htmlmin'], () => {
+    browserSync.init({
+        server: "./src"
+    });
+
+    gulp.watch("./src/styles/scss/**/*.scss", ['sass']);
+    gulp.watch("./src/**/*.html").on("change", reload);
+});
+
+gulp.task('default', ['serve', 'esJs', 'index-inject', 'htmlmin']);    
