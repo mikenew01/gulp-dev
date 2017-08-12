@@ -25,6 +25,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-cssmin": "^0.2.0",
     "gulp-inject": "^4.2.0",
+    "gulp-notify": "^3.0.0",
     "gulp-sass": "^3.1.0",
     "gulp-strip-css-comments": "^1.2.0",
     "gulp-uglify": "^3.0.0",

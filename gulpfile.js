@@ -8,6 +8,7 @@ const uglify      = require('gulp-uglify');
 const concat      = require('gulp-concat');
 const inject      = require('gulp-inject');
 const autoprefix  = require('gulp-autoprefixer');
+const notify      = require('gulp-notify');
 const reload      = browserSync.reload;
 
 gulp.task('serve', ['sass', 'esJs', 'index-inject'], () => {
@@ -26,22 +27,19 @@ gulp.task('sass', () => {
         .pipe(concat('style.min.css')) 
         .pipe(gulp.dest("./src/build/css")) 
         .pipe(cssComments({all: true}))
-        .pipe(autoprefix({
-            browsers: ['last 3 versions'],
-            cascade: false
-        }))
-        .pipe(browserSync.stream());
+        .pipe(autoprefix({browsers: ['last 3 versions', '> 5%'], cascade: false}))
+        .pipe(browserSync.stream())
+        .pipe(notify('[OK] - Compilação do SASS para CSS'));
 });
 
 //Transpile ES6
 gulp.task('esJs', () => {
     return gulp.src('./src/js/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
+        .pipe(babel({presets: ['es2015']}))
         .pipe(concat('script.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./src/build/js'));
+        .pipe(gulp.dest('./src/build/js'))
+        .pipe(notify('[OK] - Transpile do JSEs6 para JS'));
 });
 
 //Inject js and css
@@ -49,7 +47,8 @@ gulp.task('esJs', () => {
 gulp.task('index-inject', () => {
     return gulp.src('./src/index.html')
     .pipe(inject(gulp.src(['build/css/*.css', 'build/js/*.js'], {relative:true})))
-    .pipe(gulp.dest('./src/'));
+    .pipe(gulp.dest('./src/'))
+    .pipe(notify('[OK] - Injeção do JS e CSS na página index'));
 });
 
 gulp.task('default', ['serve', 'esJs', 'index-inject']);
