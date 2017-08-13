@@ -5,6 +5,10 @@
 # Project Start
 This project is base for application Gulp, using the stack: gulp, gulp-sass, gulp-strip-css-comments, gulp-babel, gulp-uglify, gulp-concat, gulp-inject, gulp-autoprefixer, gulp-notify, gulp-if, gulp-clean-css, gulp-rev, del, browserSync .
 
+## Pré Requirements
+  * NodeJS 6.10.2+ Support ES6
+  * NPM 3.10.10+ 
+
 ````git
 git clone https://github.com/Maikoncanuto/gulp-dev.git
 ````
