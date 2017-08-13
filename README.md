@@ -9,7 +9,7 @@ This project is base for application Gulp, using the stack: gulp, gulp-sass, gul
 git clone https://github.com/Maikoncanuto/gulp-dev.git
 ````
 
-## Getting Starter
+## Getting Started
 
 #### Download the dependencies and launch the application:
 ````node
